@@ -1,4 +1,4 @@
-FROM openjdk:11-jre-slim-bullseye
+FROM eclipse-temurin:11-jre-jammy
 ENV VERSION 5.2.1
 ENV PLATFORM jre-11
 ENV HOME /root
