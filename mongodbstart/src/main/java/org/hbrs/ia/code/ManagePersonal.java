@@ -20,6 +20,5 @@ public interface ManagePersonal {
     
     void updateSalesMan(SalesMan record);
     void deleteSalesMan(int sid);
-    void deleteAllSalesMen();
     void deleteSocialPerformanceRecords(SalesMan salesMan);
 }

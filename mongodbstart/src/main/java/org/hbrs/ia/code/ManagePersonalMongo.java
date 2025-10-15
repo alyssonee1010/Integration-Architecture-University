@@ -88,12 +88,6 @@ public class ManagePersonalMongo implements ManagePersonal, AutoCloseable {
     }
 
     @Override
-    public void deleteAllSalesMen() {
-        salesmen.deleteMany(new Document());
-        social.deleteMany(new Document());
-    }
-
-    @Override
     public void deleteSocialPerformanceRecords(SalesMan salesMan) {
         social.deleteMany(eq("sid", salesMan.getId()));
     }
