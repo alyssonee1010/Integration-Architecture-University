@@ -28,10 +28,7 @@ class HighPerformanceTest {
     
     @BeforeEach
     void setUp() {
-        // Setting up the connection to a local MongoDB with standard port 27017
-        // must be started within a terminal with command 'mongod'.
          supermongo = client.getDatabase("highperformanceNewTest");
-        // Get Collection 'salesmen' (creates one if not available)
         salesmen = supermongo.getCollection("salesmen");
         // Start clean per test
         salesmen.drop();

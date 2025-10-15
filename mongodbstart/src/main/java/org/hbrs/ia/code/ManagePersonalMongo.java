@@ -78,14 +78,12 @@ public class ManagePersonalMongo implements ManagePersonal, AutoCloseable {
 
     @Override
     public void updateSalesMan(SalesMan record) {
-        // Update not required by assignment; keep explicit
-        throw new UnsupportedOperationException("Update not required by assignment");
+        throw new UnsupportedOperationException("Update not allowerd");
     }
 
     @Override
     public void deleteSalesMan(int sid) {
         salesmen.deleteOne(eq("sid", sid));
-        // Optional: also clean up that salesman’s social records
         social.deleteMany(eq("sid", sid));
     }
 
