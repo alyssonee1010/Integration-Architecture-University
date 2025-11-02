@@ -2,6 +2,8 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import axios from "axios";
 import dotenv from "dotenv"
+
+import salesmanRoutes from './routes/salesman.routes.js'; // Achten Sie auf die Dateierweiterung!
 dotenv.config();
 
 const app = express();
@@ -67,6 +69,13 @@ app.get("/accounts", async (req, res) => {
     res.status(500).send("Error fetching accounts");
   }
 });
+
+
+// -------------------- Salesmen Implementation --------------------
+
+app.use('/salesmen', salesmanRoutes);
+
+
 
 // Start Express server
 app.listen(port, () => {
