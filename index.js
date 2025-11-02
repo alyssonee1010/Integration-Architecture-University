@@ -1,55 +1,37 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import axios from "axios";
-import dotenv from "dotenv"
+import dotenv from "dotenv";
 
-import salesmanRoutes from './routes/salesman.routes.js'; // Achten Sie auf die Dateierweiterung!
+import salesmanRoutes from "./routes/salesman.routes.js"; // CJS default interop works
+
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT;
-// Enable middleware for parsing cookies and JSON bodies
+const port = process.env.PORT || 3000;
+
 app.use(cookieParser());
 app.use(express.json());
 
 const baseUrl = "https://sepp-crm.inf.h-brs.de/opencrx-rest-CRX/org.opencrx.kernel.account1/provider/CRX/segment/Standard";
-const credentials = { username: process.env.OPENCRX_USERNAME, password: process.env.OPENCRX_PASSWORD};
+const credentials = { username: process.env.OPENCRX_USERNAME, password: process.env.OPENCRX_PASSWORD };
+const config = { headers: { Accept: "application/json" }, auth: credentials };
 
-const config = {
-  headers: { Accept: "application/json" },
-  auth: credentials,
-};
-
-// -------------------- ASYNC/AWAIT + AXIOS + REST INTERFACE --------------------
-
-// Example of providing a simple REST-based interface and consuming another REST API (OpenCRX) using Axios.
-// async/await is used for handling asynchronous HTTP requests in a clean way (instead of Callbacks)
+// Example OpenCRX route (optional)
 // app.get("/accounts", async (req, res) => {
 //   try {
-//     // Await: Pauses until Axios finishes fetching data
-//     const response = await axios.get(`${baseUrl}/account`, config);
-//     const accounts = response.data.objects;
-
-//     // Store last fetch timestamp in a cookie
+//     const { data } = await axios.get(`${baseUrl}/account`, config);
 //     res.cookie("lastFetch", new Date().toISOString(), { httpOnly: true });
-
-//     // Send fetched account data as JSON
-//     res.json(accounts);
-//   } catch (error) {
-//     // Error handling for failed async operation
-//     console.error(error);
+//     res.json(data.objects);
+//   } catch (err) {
+//     console.error(err);
 //     res.status(500).send("Error fetching accounts");
 //   }
 // });
 
+// Salesmen API (in-memory)
+app.use("/salesmen", salesmanRoutes);
 
-// -------------------- Salesmen Implementation --------------------
-
-app.use('/salesmen', salesmanRoutes);
-
-
-
-// Start Express server
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
