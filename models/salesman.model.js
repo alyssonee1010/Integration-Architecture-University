@@ -167,6 +167,12 @@ const staticSalesmen = [
             { year: 2025, leadership_competence: 1, openness_employees: 3, attitude_clients: 3, communication: 3, integrity_company: 3 },
             { year: 2024, leadership_competence: 1, openness_employees: 4, attitude_clients: 4, communication: 4, integrity_company: 2 }
         ]
+    },
+    {
+        _id: "ff39650b15598b427b854622",
+        firstname: "Mark",
+        lastname: "Mustermann",
+        performanceRecords: []
     }
 ];
 
@@ -196,6 +202,22 @@ function getSocialPerformanceRecordBySalesmen(id) {
   const s = getSalesmanById(id);
   if (!s) return null;
   return s.performanceRecords;
+}
+
+function getSocialPerformanceRecordBySalesmenByYear(id, year) {
+    const s = getSalesmanById(id);
+    if (!s) return null;
+    const records = Array.isArray(s.performanceRecords) ? s.performanceRecords : null;
+    if (!records) return null;
+
+    const y = typeof year === "number" ? year : Number.parseInt(String(year), 10);
+    if (!Number.isFinite(y)) return null;
+
+    const rec = records.find(r => {
+        const ry = typeof r.year === "number" ? r.year : Number.parseInt(String(r.year), 10);
+        return Number.isFinite(ry) && ry === y;
+    })
+    return rec ?? null;
 }
 
 function createSocialPerformanceRecord(id, record) {
@@ -259,6 +281,7 @@ module.exports = {
     getAllSalesmen,
     getSalesmanById,
     getSocialPerformanceRecordBySalesmen,
+    getSocialPerformanceRecordBySalesmenByYear,
     createSocialPerformanceRecord,
     createSalesMan,
     deleteSalesMan,

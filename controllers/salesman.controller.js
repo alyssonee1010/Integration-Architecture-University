@@ -50,6 +50,12 @@ function handleGetRecordsById(req, res) {
   if (list === null) return res.status(404).json({ error: "Salesman not found", id });
   res.status(200).json(list);
 }
+function handleGetRecordsByIdByYear(req, res) {
+  const id = String(req.params.id);
+  const record = salesmanModel.getSocialPerformanceRecordBySalesmenByYear(id, req.params.year);
+  if (record === null) return res.status(404).json({ error: "Salesman not found", id });
+  res.status(200).json(record);
+}
 
 function handleCreateRecord(req, res) {
   const id = String(req.params.id);
@@ -91,6 +97,7 @@ module.exports = {
   handleUpdateSalesman,
   handleDeleteSalesman,
   handleGetRecordsById,
+  handleGetRecordsByIdByYear,
   handleCreateRecord,
   handleReplaceAllRecords,
   handleDeleteAllRecords,

@@ -1,4 +1,5 @@
-export const isPerformanceRecordValid = (record)=> {
+const is1to5 = (n) => n >= 1 && n <= 5;
+const isPerformanceRecordValid = (record) => {
     const { year, leadership_competence, openness_employees, attitude_clients, communication, integrity_company } = record;
     if (!Number.isInteger(year)) return false;
     // ensure each metric is 1..5
@@ -8,12 +9,12 @@ export const isPerformanceRecordValid = (record)=> {
     return true
 }
 
-export function cryptoRandomId() {
+function cryptoRandomId() {
   return Array.from(crypto.getRandomValues(new Uint8Array(12)))
     .map(b => b.toString(16).padStart(2, "0")).join("");
 }
 
-export function assertPerformanceRecordArray(records) {
+function assertPerformanceRecordArray(records) {
   if (!Array.isArray(records)) throw new Error("performanceRecords must be an array.");
   const years = new Set();
   for (const rec of records) {
@@ -25,4 +26,10 @@ export function assertPerformanceRecordArray(records) {
     }
     years.add(rec.year);
   }
+}
+
+module.exports = {
+    assertPerformanceRecordArray,
+    isPerformanceRecordValid,
+    cryptoRandomId
 }

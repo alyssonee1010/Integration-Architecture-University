@@ -30,7 +30,7 @@ const config = { headers: { Accept: "application/json" }, auth: credentials };
 // });
 
 // Salesmen API (in-memory)
-app.use("/salesmen", salesmanRoutes);
+app.use("/salesman", salesmanRoutes);
 
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
