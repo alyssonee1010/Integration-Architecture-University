@@ -1,0 +1,260 @@
+openapi: 3.0.3
+info:
+  title: Salesmen & Social Performance REST API
+  version: 1.0.0
+  description: >
+    Simple REST-based interface for administrating salesmen and their
+    social performance records.  
+    This API uses an **in-memory dataset** (no MongoDB yet).  
+    Performance records can be replaced entirely (delete & recreate) through PUT.
+
+servers:
+  - url: http://localhost:3000
+
+paths:
+  /salesmen:
+    get:
+      summary: Get all salesmen
+      description: Retrieve a list of all salesmen in the system.
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Salesman"
+    post:
+      summary: Create a new salesman
+      description: Add a new salesman with firstname and lastname.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SalesmanCreate"
+      responses:
+        "201":
+          description: Salesman created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Salesman"
+        "400":
+          description: Missing required fields or invalid data
+
+  /salesmen/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: Unique ID of the salesman
+        schema:
+          type: string
+    get:
+      summary: Get salesman by ID
+      responses:
+        "200":
+          description: Salesman found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Salesman"
+        "404":
+          description: Salesman not found
+    put:
+      summary: Update a salesman
+      description: >
+        Updates a salesman's firstname/lastname and optionally replaces
+        their performance records entirely.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SalesmanUpdate"
+      responses:
+        "200":
+          description: Salesman updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Salesman"
+        "400":
+          description: Validation or bad request
+        "404":
+          description: Salesman not found
+    delete:
+      summary: Delete a salesman
+      responses:
+        "204":
+          description: Salesman deleted successfully
+        "404":
+          description: Salesman not found
+
+  /salesmen/{id}/performance-records:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: Salesman ID
+        schema:
+          type: string
+    get:
+      summary: Get performance records for a salesman
+      responses:
+        "200":
+          description: List of performance records
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PerformanceRecord"
+        "404":
+          description: Salesman not found
+    post:
+      summary: Add a performance record
+      description: Add a single new performance record for the given salesman.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PerformanceRecord"
+      responses:
+        "201":
+          description: Performance record created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PerformanceRecord"
+        "400":
+          description: Invalid record data or duplicate year
+        "404":
+          description: Salesman not found
+    put:
+      summary: Replace all performance records
+      description: >
+        Deletes existing records and replaces them with the provided array.
+        Useful for “update all” scenarios.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/PerformanceRecord"
+      responses:
+        "200":
+          description: Records replaced successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PerformanceRecord"
+        "400":
+          description: Validation error
+        "404":
+          description: Salesman not found
+    delete:
+      summary: Delete all performance records
+      description: Remove all performance records for the given salesman.
+      responses:
+        "200":
+          description: Records deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  cleared:
+                    type: integer
+                    description: Number of records removed
+                    example: 3
+        "404":
+          description: Salesman not found
+
+components:
+  schemas:
+    Salesman:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: "68efd009111f8005f688d5fb"
+        firstname:
+          type: string
+          example: "Anna"
+        lastname:
+          type: string
+          example: "Schmidt"
+        performanceRecords:
+          type: array
+          items:
+            $ref: "#/components/schemas/PerformanceRecord"
+
+    SalesmanCreate:
+      type: object
+      required: [firstname, lastname]
+      properties:
+        firstname:
+          type: string
+          example: "Lukas"
+        lastname:
+          type: string
+          example: "Fischer"
+
+    SalesmanUpdate:
+      type: object
+      description: >
+        Used for updating a salesman.  
+        You may include firstname, lastname, and optionally a full list of performanceRecords (to replace all).
+      properties:
+        firstname:
+          type: string
+          example: "Lena"
+        lastname:
+          type: string
+          example: "Müller"
+        performanceRecords:
+          type: array
+          items:
+            $ref: "#/components/schemas/PerformanceRecord"
+
+    PerformanceRecord:
+      type: object
+      required:
+        - year
+        - leadership_competence
+        - openness_employees
+        - attitude_clients
+        - communication
+        - integrity_company
+      properties:
+        year:
+          type: integer
+          example: 2025
+        leadership_competence:
+          type: integer
+          minimum: 1
+          maximum: 5
+        openness_employees:
+          type: integer
+          minimum: 1
+          maximum: 5
+        attitude_clients:
+          type: integer
+          minimum: 1
+          maximum: 5
+        communication:
+          type: integer
+          minimum: 1
+          maximum: 5
+        integrity_company:
+          type: integer
+          minimum: 1
+          maximum: 5
