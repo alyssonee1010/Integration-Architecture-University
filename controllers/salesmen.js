@@ -11,9 +11,8 @@ const {
   updateSalesMan,
 } = require("../services/salesmen");
 
-// Helper to map service errors to HTTP status codes (simple version)
 function toStatusCode(err) {
-  // You can enhance this later with custom error types
+  // TO DO custom error types
   return 400;
 }
 
