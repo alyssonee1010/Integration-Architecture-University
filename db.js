@@ -2,7 +2,7 @@
 const mongoose = require("mongoose");
 
 async function connectDB() {
-  const uri = process.env.MONGO_URI || "mongodb://localhost:27017/bmw-aia";
+  const uri = process.env.MONGO_URI || "mongodb://localhost:27017/salesman";
 
   // optional, but recommended
   mongoose.set("strictQuery", true);
